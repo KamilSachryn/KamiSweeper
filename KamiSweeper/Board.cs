@@ -14,7 +14,7 @@ namespace KamiSweeper
         //TODO: Custom sizes
 
         // Tile[,] board = new Tile[height,width];
-        List<List<Tile>> board = new List<List<Tile>>(); 
+        public List<List<Tile>> board = new List<List<Tile>>(); 
 
         public Board() : this(9,9,10)
         {

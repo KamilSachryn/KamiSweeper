@@ -10,6 +10,7 @@ namespace KamiSweeper
     {
         public bool isMine = false;
         public int numMines = 0;
+        public bool cleared = false;
 
         public Tile()
         {
@@ -29,6 +30,7 @@ namespace KamiSweeper
             isMine = mine;
             numMines = mines;
         }
+
 
     }
 }

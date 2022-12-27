@@ -22,29 +22,45 @@ namespace KamiSweeper
     {
         Board board;
 
-        List<List<Button>> buttons = new List<List<Button>>();
+        List<List<TileButton>> buttons = new List<List<TileButton>>();
         
         public MainWindow()
         {
             InitializeComponent();
+
             int h = 20;
             int w = 20;
             int b = 20;
+
+            int buttonWidth = 30;
+
+
+
+
             board = new Board(h,w,b);
 
             for(int i = 0; i < h; i++)
             {
-                buttons.Add(new List<Button>());
+                buttons.Add(new List<TileButton>());
                 for(int j = 0; j < w; j++)
                 {
-                    Button tempButton = new Button();
-                    tempButton.Name =  "_" + i + "_" + j + "_" ;
-                    buttons[i].Add(tempButton);
+                    TileButton temp = new TileButton(_grid, board, buttons, i, j);
+                    temp.btn.Click += Btn_Click;
+                    buttons[i].Add(temp);
+
+
                 }
             }
             
             
             
+            
+            
+        }
+
+        private void Btn_Click(object sender, RoutedEventArgs e)
+        {
+            Button button = (Button)sender;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
