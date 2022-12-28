@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
+using System.Windows.Media;
 
 namespace KamiSweeper
 {
@@ -22,7 +25,7 @@ namespace KamiSweeper
         Tile tile;
         List<List<TileButton>> buttons;
 
-        public TileButton(Grid grid,Board board, List<List<TileButton>> buttons, int height, int width)
+        public TileButton(Grid grid, Board board, List<List<TileButton>> buttons, int height, int width)
         {
             this.btn = new Button();
             this.board = board;
@@ -40,7 +43,7 @@ namespace KamiSweeper
 
         void MoveButton()
         {
-            btn.Content = tile.isMine ?  "?b" : "?" + tile.numMines ;
+            //btn.Content = tile.isMine ?  "?b" : "?" + tile.numMines ;
             btn.Name = "_DyanmicButton";
             btn.IsEnabled = true;
             btn.Width = sizeWidth;
@@ -48,19 +51,24 @@ namespace KamiSweeper
             btn.HorizontalAlignment = HorizontalAlignment.Left;
             btn.VerticalAlignment = VerticalAlignment.Top;
             btn.Margin = new Thickness(offset + sizeHeight * (height - 1), offset + sizeWidth * (width - 1), 0, 0);
-            btn.Click += Btn_Click;
-
+            btn.PreviewMouseRightButtonUp += Btn_RightClick;
+            btn.PreviewMouseLeftButtonUp += Btn_LeftClick;
+            btn.Background = Brushes.Gray;
             grid.Children.Add(btn);
-            
-            
+
+
         }
 
-        private void Btn_Click(object sender, RoutedEventArgs e)
+        private void Btn_LeftClick(object sender, MouseButtonEventArgs e)
         {
+            
+
+            
             Button button = (Button)sender;
             if (tile.isMine)
             {
                 button.Content = "b";
+                buttons[height][width].btn.Background = Brushes.Red;
             }
             else
             {
@@ -71,36 +79,80 @@ namespace KamiSweeper
             {
                 clearEmpty(height, width);
             }
+            
+
+            //e.Handled = true;
+        }
+
+        private void Btn_RightClick(object sender, MouseButtonEventArgs e)
+        {
+            if(buttons[height][width].btn.Background == Brushes.Blue)
+            {
+                buttons[height][width].btn.Background = Brushes.Gray;
+            }
+            else
+            {
+                buttons[height][width].btn.Background = Brushes.Blue;
+            }
+            
+
+        }
+            void revealSurrounding(int height, int width)
+        {
+            for (int iHeight = -1; iHeight <= 1; iHeight++)
+            {
+                for (int jWidth = -1; jWidth <= 1; jWidth++)
+                {
+                    if (isValid(height + iHeight, width + jWidth))
+                    {
+
+                        
+
+                    }
+                }
+            }
         }
 
         void clearEmpty(int height, int width)
         {
-            try
+
+            for (int iHeight = -1; iHeight <= 1; iHeight++)
             {
-                for (int iHeight = -1; iHeight <= 1; iHeight++)
+                for (int jWidth = -1; jWidth <= 1; jWidth++)
                 {
-                    for (int jWidth = -1; jWidth <= 1; jWidth++)
+                    if (isValid(height + iHeight, width + jWidth))
                     {
+                        Tile tempTile = board.board[height + iHeight][width + jWidth];
                         //TODO: Fix this abomination.
-                        if (((iHeight == -1 && jWidth == 0) || (iHeight == 0 && jWidth == -1) || (iHeight == 0 && jWidth == 1) || (iHeight == 1 && jWidth == 0) || (iHeight == 0 && jWidth == 0)) &&
-                            ((height + iHeight >= 0) && (width + jWidth >= 0) && (height + iHeight < board.height) && (width + jWidth < board.width)))
+                        if (((iHeight == -1 && jWidth == 0) || (iHeight == 0 && jWidth == -1) || (iHeight == 0 && jWidth == 1) || (iHeight == 1 && jWidth == 0) || (iHeight == 0 && jWidth == 0)))// ((height + iHeight >= 0) && (width + jWidth >= 0) && (height + iHeight < board.height) && (width + jWidth < board.width)))
                         {
 
-                            Tile tempTile = board.board[height + iHeight][width + jWidth];
+                            
                             if (tempTile.numMines == 0 && board.board[height + iHeight][width + jWidth].cleared == false)
                             {
                                 board.board[height + iHeight][width + jWidth].cleared = true;
                                 buttons[height + iHeight][width + jWidth].btn.Content = "";
+                                buttons[height + iHeight][width + jWidth].btn.Background = Brushes.Gray;
                                 clearEmpty(height + iHeight, width + jWidth);
                             }
                         }
+
+                        if(tempTile.numMines > 0)
+                        {
+                            buttons[height + iHeight][width + jWidth].btn.Content = tempTile.numMines;
+                        }
+
+
                     }
+
                 }
             }
-            catch (ArgumentOutOfRangeException ex)
-            {
-                //out of bounds
-            }
+
+        }
+
+        bool isValid(int h, int w)
+        {
+            return ((h >= 0) && (w >= 0) && (h < board.height) && (w < board.width));
         }
     }
 }

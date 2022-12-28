@@ -78,14 +78,12 @@ namespace KamiSweeper
                         {
                             for(int l = -1; l <= 1; l++)
                             {
-                                try
-                                {
-                                    board[i + k][j + l].numMines++;
-                                }
-                                catch (Exception e)
-                                {
-                                    //out of bounds, we dont care
-                                }
+                                
+                                    if (isValid(i + k, j + l))
+                                    {
+                                        board[i + k][j + l].numMines++;
+                                    }
+
                             }
                         }
                     }
@@ -109,6 +107,11 @@ namespace KamiSweeper
             }
 
             return str;
+        }
+
+        bool isValid(int h, int w)
+        {
+            return ((h >= 0) && (w >= 0) && (h < height) && (w < width));
         }
 
 

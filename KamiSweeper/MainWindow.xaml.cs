@@ -30,7 +30,7 @@ namespace KamiSweeper
 
             int h = 20;
             int w = 20;
-            int b = 20;
+            int b = 40;
 
             int buttonWidth = 30;
 
