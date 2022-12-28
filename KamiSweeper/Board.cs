@@ -8,9 +8,9 @@ namespace KamiSweeper
 {
     internal class Board
     {
-        int height = 9;
-        int width = 9;
-        int mines = 10;
+        public int height = 9;
+        public int width = 9;
+        public int mines = 10;
         //TODO: Custom sizes
 
         // Tile[,] board = new Tile[height,width];

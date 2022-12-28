@@ -13,8 +13,8 @@ namespace KamiSweeper
 
         public Button btn;
         Grid grid;
-        int x;
-        int y;
+        int height;
+        int width;
         int sizeHeight = 30;
         int sizeWidth = 30;
         float offset = 30;
@@ -22,14 +22,14 @@ namespace KamiSweeper
         Tile tile;
         List<List<TileButton>> buttons;
 
-        public TileButton(Grid grid,Board board, List<List<TileButton>> buttons, int x, int y)
+        public TileButton(Grid grid,Board board, List<List<TileButton>> buttons, int height, int width)
         {
             this.btn = new Button();
             this.board = board;
             this.grid = grid;
-            this.x = x;
-            this.y = y;
-            tile = board.board[x][y];
+            this.height = height;
+            this.width = width;
+            tile = board.board[height][width];
             this.buttons = buttons;
 
 
@@ -47,7 +47,7 @@ namespace KamiSweeper
             btn.Height = sizeHeight;
             btn.HorizontalAlignment = HorizontalAlignment.Left;
             btn.VerticalAlignment = VerticalAlignment.Top;
-            btn.Margin = new Thickness(offset + sizeHeight * (x - 1), offset + sizeWidth * (y - 1), 0, 0);
+            btn.Margin = new Thickness(offset + sizeHeight * (height - 1), offset + sizeWidth * (width - 1), 0, 0);
             btn.Click += Btn_Click;
 
             grid.Children.Add(btn);
@@ -67,33 +67,55 @@ namespace KamiSweeper
                 button.Content = tile.numMines;
             }
 
-            clearEmpty(x, y);
-            
+            if (tile.numMines == 0)
+            {
+                clearEmpty(height, width);
+            }
         }
 
-        void clearEmpty(int x, int y)
+        void clearEmpty(int height, int width)
         {
             try
             {
-                for (int i = -1; i <= 1; i++)
+                for (int iHeight = -1; iHeight <= 1; iHeight++)
                 {
-                    for (int j = -1; j <= 1; j++)
+                    for (int jWidth = -1; jWidth <= 1; jWidth++)
                     {
-                        Tile tempTile = board.board[x + i][y + j];
-                        if (tempTile.numMines == 0 && board.board[x + i][y + j].cleared == false)
+                        //TODO: Fix this abomination.
+                        if (((iHeight == -1 && jWidth == 0) || (iHeight == 0 && jWidth == -1) || (iHeight == 0 && jWidth == 1) || (iHeight == 1 && jWidth == 0) || (iHeight == 0 && jWidth == 0)) &&
+                            ((height + iHeight >= 0) && (width + jWidth >= 0) && (height + iHeight < board.height) && (width + jWidth < board.width)))
                         {
-                            board.board[x + i][y + j].cleared = true;
-                            buttons[x + i][y + j].btn.Content = "";
-                            clearEmpty(x + i, y + j);
-                        }
 
+                            Tile tempTile = board.board[height + iHeight][width + jWidth];
+                            if (tempTile.numMines == 0 && board.board[height + iHeight][width + jWidth].cleared == false)
+                            {
+                                board.board[height + iHeight][width + jWidth].cleared = true;
+                                buttons[height + iHeight][width + jWidth].btn.Content = "";
+                                clearEmpty(height + iHeight, width + jWidth);
+                            }
+                        }
                     }
                 }
             }
-            catch (Exception ex)
+            catch (ArgumentOutOfRangeException ex)
             {
                 //out of bounds
             }
         }
     }
 }
+
+/*
+
+
+
+-1-1  -10  -11
+
+0-1   00   01
+
+1-1   10   11
+
+
+
+
+*/

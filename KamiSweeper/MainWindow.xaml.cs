@@ -39,14 +39,14 @@ namespace KamiSweeper
 
             board = new Board(h,w,b);
 
-            for(int i = 0; i < h; i++)
+            for(int iHeight = 0; iHeight < h; iHeight++)
             {
                 buttons.Add(new List<TileButton>());
-                for(int j = 0; j < w; j++)
+                for(int jWidth = 0; jWidth < w; jWidth++)
                 {
-                    TileButton temp = new TileButton(_grid, board, buttons, i, j);
+                    TileButton temp = new TileButton(_grid, board, buttons, iHeight, jWidth);
                     temp.btn.Click += Btn_Click;
-                    buttons[i].Add(temp);
+                    buttons[iHeight].Add(temp);
 
 
                 }
