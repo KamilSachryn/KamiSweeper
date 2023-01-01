@@ -28,49 +28,30 @@ namespace KamiSweeper
         {
             InitializeComponent();
 
-            int h = 20;
-            int w = 20;
-            int b = 40;
+            //default values
+            int boardHeight = 20;
+            int boardWidth = 20;
+            int boardBombs = 40;
+            //set up board size 
+            board = new Board(boardHeight,boardWidth,boardBombs);
 
-            int buttonWidth = 30;
 
-
-
-
-            board = new Board(h,w,b);
-
-            for(int iHeight = 0; iHeight < h; iHeight++)
+            //create dynamic buttons in h x w grid
+            for(int i_Height = 0; i_Height < boardHeight; i_Height++)
             {
                 buttons.Add(new List<TileButton>());
-                for(int jWidth = 0; jWidth < w; jWidth++)
+                for(int j_Width = 0; j_Width < boardWidth; j_Width++)
                 {
-                    TileButton temp = new TileButton(_grid, board, buttons, iHeight, jWidth);
-                    temp.btn.Click += Btn_Click;
-                    buttons[iHeight].Add(temp);
+                    TileButton temp = new TileButton(_grid, board, buttons, i_Height, j_Width);
+                    buttons[i_Height].Add(temp);
 
 
                 }
             }
-            
-            
-            
-            
-            
+        
         }
 
-        private void Btn_Click(object sender, RoutedEventArgs e)
-        {
-            Button button = (Button)sender;
-        }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
 
-        }
-
-        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-
-        }
     }
 }

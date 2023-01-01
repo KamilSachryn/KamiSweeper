@@ -11,11 +11,13 @@ namespace KamiSweeper
         public int height = 9;
         public int width = 9;
         public int mines = 10;
-        //TODO: Custom sizes
+        //TODO: Custom tile input from user
 
-        // Tile[,] board = new Tile[height,width];
+        //2d list of tiles
+        //need a list due to board size being dynamic
         public List<List<Tile>> board = new List<List<Tile>>(); 
 
+        //default size 9x9:10
         public Board() : this(9,9,10)
         {
             
@@ -33,6 +35,7 @@ namespace KamiSweeper
 
         }
 
+        //Add tile objects to board
         public void setUpBoard()
         {
             for (int i = 0; i < height; i++)
@@ -44,7 +47,7 @@ namespace KamiSweeper
                 }
             }
         }
-
+         //randomly place mines by modifying tileobjects
         void setUpMines()
         {
 
@@ -66,6 +69,7 @@ namespace KamiSweeper
 
         }
 
+        //increment a number to every tile surrounding a mine 
         void setUpNumbers()
         {
             for (int i = 0; i < height; i++)
@@ -92,7 +96,7 @@ namespace KamiSweeper
         }
 
 
-
+        //debug, show mines and numbers
         public string getBoardString()
         {
             string str = "";
@@ -109,6 +113,7 @@ namespace KamiSweeper
             return str;
         }
 
+        //if in board, out of range protection
         bool isValid(int h, int w)
         {
             return ((h >= 0) && (w >= 0) && (h < height) && (w < width));
